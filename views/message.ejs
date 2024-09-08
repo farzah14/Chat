@@ -1,0 +1,120 @@
+<%- include("./partials/head.ejs") %>
+
+  <header>
+    <%- include("./partials/navbar.ejs") %>
+  </header>
+  <main>
+    <% if (!create) { %>
+      <% if (messages.length===0) { %>
+        <div class="flex flex-col justify-center items-center mt-24">
+          <img src=../img/communication.png alt="No Messages" class="mb-4 size-24">
+          <p class="text-4xl font-bold text-red-500 mb-2">Messages Not Found</p>
+          <p class="text-lg text-gray-600 mb-6 text-center">It seems there are no messages to display. Please check
+            back later or create a new message.</p>
+          <a href="/message/create"
+            class="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white font-semibold shadow-md hover:bg-blue-500 transition duration-300">Create
+            a New Message</a>
+        </div>
+
+        <% } else { %>
+          <div class="grid grid-cols-3">
+            <% for (let message of messages.reverse()) { %>
+              <div
+                class="bg-slate-100 shadow-lg rounded-lg p-6 mt-6 mx-auto w-96 hover:cursor-pointer hover:scale-105 transition ease-in-out">
+                <div class="flex flex-col justify-start mb-10">
+                    <form action="/message/delete" method="POST">
+                      <input type="hidden" name="id" value="<%=message.id%>">
+                      <button class="absolute" type="submit">
+                        <img src="../img/remove.png" alt="iconRemove" class="size-6  ml-80">
+                      </button>
+                    </form>
+                    <a href="/message/<%=message.id%>" class="absolute">
+                      <img src="../img/info.png" alt="iconRemove" class="size-6 ml-72">
+                    </a>
+                    <a href="/message/edit/<%=message.id%>" class="absolute">
+                      <img src="../img/edit.png" alt="iconRemove" class="size-6 ml-64">
+                    </a>
+                </div>
+                <div class="flex flex-row justify-between">
+                  <p class="text-gray-800 text-2xl">
+                    <%= message.message %>
+                  </p>
+                  <p class="text-stone-500 italic">
+                    <%= message.country %>
+                  </p>
+                </div>
+              </div>
+              <% } %>
+
+                <% } %>
+          </div>
+          <% } else { %>
+            <form method="POST" action="/message/<%= editing ? 'edit' : 'create' %>">
+              <div class="flex justify-center items-center">
+                <div class="border border-neutral-400 rounded-lg py-6 px-12 mt-4 bg-slate-200">
+                  <h2 class="text-base font-semibold leading-7 text-gray-900 text-center">Create Message</h2>
+
+                  <div class="mt-2">
+                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                    <div class="mt-2">
+                      <input id="name" name="nameUser" type="text"
+                        class="block w-64 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6"
+                        placeholder="Recipient's Name" value="<% if (editing) { %><%=messageUser.name%><% } %>">
+                    </div>
+                  </div>
+
+                  <div class="mt-2">
+                    <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Message</label>
+                    <div class="mt-2">
+                      <textarea id="message" name="message" rows="3"
+                        class="block w-64 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6"><% if (editing) { %><%=messageUser.message%><% } %></textarea>
+                    </div>
+                  </div>
+
+                  <div class="mt-2">
+                    <label for="gender" class="font-medium leading-6 text-gray-900">Gender</label>
+                    <div class="mt-2 flex flex-row gap-x-8">
+                      <div>
+                        <input id="gender" value="male" type="checkbox" name="gender"
+                          class="default:ring-2 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6 classCheck"
+                          id="check" <%=messageUser.gender==="male" ? "checked" : "" %>
+                        <label for="male">Male</label>
+                      </div>
+                      <div>
+                        <input id="gender" value="female" type="checkbox" name="gender"
+                          class="default:ring-2 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6 classCheck"
+                          id="check" <%=messageUser.gender==="female" ? "checked" : "" %>>
+                        <label for="female">Female</label>
+                      </div>
+                      <div>
+                        <input id="gender" value="other" type="checkbox" name="gender"
+                          class="default:ring-2 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6 classCheck"
+                          id="check">
+                        <label for="other">Other</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class=" mt-2">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Country</label>
+                    <input id="country" name="country" type="text"
+                      class="block w-64 rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 sm:text-sm sm:leading-6"
+                      placeholder="Indonesia" value="<% if (editing) { %><%=messageUser.country%><% } %>">
+                  </div>
+
+                  <div class="mt-6 flex items-center justify-end gap-x-6">
+                    <button type="button" class="text-sm font-semibold leading-6 text-gray-900"
+                      onclick="window.history.back()">Cancel</button>
+                    <button type="submit"
+                      class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      onclick="submitMessage()">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <% } %>
+
+
+  </main>
+
+  <%- include("./partials/end.ejs") %>

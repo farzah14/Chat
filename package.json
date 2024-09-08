@@ -1,0 +1,31 @@
+{
+	"name": "blogspot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"build:css": "tailwindcss build public/css/style.css -o public/css/tailwind.css --watch",
+		"start:dev": "cross-env NODE=development nodemon app.",
+		"start:test": "cross-env NODE=testing nodemon app.js",
+		"start:prod": "cross-env NODE=production nodemon app.js",
+		"dev": "concurrently \"npm run build:css\" \"npm run start:dev\"",
+		"test": "concurrently \"npm run build:css\" \"npm run start:test\"",
+		"prod": "concurrently \"npm run build:css\" \"npm run start:prod\""
+	},
+	"author": "Farzah Febriyanto",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"express": "^4.19.2",
+		"nodemailer": "^6.9.14",
+		"tailwindcss-textshadow": "^2.1.3"
+	},
+	"devDependencies": {
+		"body-parser": "^1.20.2",
+		"concurrently": "^8.2.2",
+		"cross-env": "^7.0.3",
+		"ejs": "^3.1.10",
+		"nodemon": "^3.1.4",
+		"tailwindcss": "^3.4.4"
+	}
+}
